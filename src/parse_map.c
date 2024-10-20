@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:24:01 by obehavka          #+#    #+#             */
-/*   Updated: 2024/10/19 16:49:39 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/10/20 09:20:39 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,31 +86,17 @@ static int	**convert_map(char ***str_map, size_t map_length, size_t map_width)
 
 static void	init_map(char ***str_map, t_map **map)
 {
-	size_t	i;
-	size_t	j;
-
 	*map = malloc(sizeof(t_map));
 	if (!(*map))
 		return ;
-	i = 0;
-	while (str_map[i])
+	if (!get_map_sizes(*map, str_map))
 	{
-		j = 0;
-		while (str_map[i][j])
-			j++;
-		if (i == 0)
-			(*map)->width = j;
-		else if ((*map)->width != j)
-		{
-			ft_putendl_fd("Invalid file", 1);
-			free (*map);
-			*map = NULL;
-			return ;
-		}
-		++i;
+		free (map);
+		*map = NULL;
+		return ;
 	}
-	(*map)->length = i;
 	(*map)->map = convert_map(str_map, (*map)->length, (*map)->width);
+	(*map)->projection = NULL;
 	if (!(*map)->map)
 	{
 		free (*map);

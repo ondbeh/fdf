@@ -1,30 +1,39 @@
 # Name of the library
-NAME = fdf
+NAME		=	fdf
 
 # Compiler and flags
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g -I.
-RM = rm -f
-INCLUDES = -I .
+CC			=	cc
+CFLAGS		=	-Wall -Wextra -Werror -Wunreachable-code -I.
+DEBUG_FLAGS	=	-g  -fsanitize=address -fcolor-diagnostics -fansi-escape-codes
+RM			=	rm -f
+INCLUDES	=	-I .
 
 # Directories
-SRC_DIR = src
-OBJ_DIR = obj
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
+SRC_DIR		=	src
+OBJ_DIR		=	obj
+LIBFT_DIR	=	libft
+LIBFT		=	$(LIBFT_DIR)/libft.a
+MLX42_DIR	=	./MLX42
+MLX42		=	$(MLX42_DIR)/build/libmlx42.a
+MLX42_FLAGS	=
+ifeq ($(shell uname),Darwin)
+	MLX42_FLAGS = -L$(MLX42_DIR)/build -lmlx42 -framework Cocoa -framework OpenGL -framework IOKit -lglfw
+else ifeq ($(shell uname),Linux)
+	MLX42_FLAGS = -L$(MLX42_DIR)/build -lmlx42 -Iinclude -ldl -lglfw -pthread -lm
+endif
 
 # Source files and corresponding object files
-SRCS = main.c parse_map.c parse_map_utils.c
+SRCS		=	main.c parse_map.c parse_map_utils.c projection.c
 
-SRCS := $(addprefix $(SRC_DIR)/, $(SRCS))
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+SRCS		:=	$(addprefix $(SRC_DIR)/, $(SRCS))
+OBJS		=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 # Rules
 all: $(NAME)
 
 # Link object files and libft to create the final executable
-$(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+$(NAME): $(MLX42) $(LIBFT) $(OBJS)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(MLX42_FLAGS)
 	@echo "Compiling fdf project"
 
 # Compile source files into object files in the obj/ folder
@@ -41,13 +50,21 @@ $(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR) all
 	@echo "Creating libft"
 
+# Build the MLX42 library
+$(MLX42):
+	@echo "Compiling mlx42..."
+	@if [ ! -d $(MLX42_DIR)/build ]; then mkdir -p $(MLX42_DIR)/build; fi
+	@git submodule update --remote --init -q
+	@cd $(MLX42_DIR)/build && cmake .. && make -j4
+
 # Clean object files from both fdf and libft
 clean:
 	@$(MAKE) -C $(LIBFT_DIR) clean
 	@echo "Deleting libft objects"
+	@$(MAKE) -C $(MLX42_DIR)/build clean
+	@echo "Deleting MLX42 objects"
 	@rm -rf $(OBJ_DIR)
 	@echo "Deleting fdf objects"
-
 
 # Full clean: also remove the executable and libft objects
 fclean: clean
@@ -58,6 +75,10 @@ fclean: clean
 
 # Rebuild everything
 re: fclean all
+
+# Norm rule
+norm:
+	norminette src fdf.h
 
 # PHONY prevents conflicts with files named like the targets
 .PHONY: all clean fclean re
