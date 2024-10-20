@@ -1,0 +1,5 @@
+fdf
+result
+libft/obj/*.o
+libft/*.a
+obj/*.o
