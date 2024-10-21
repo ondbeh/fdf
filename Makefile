@@ -13,14 +13,10 @@ SRC_DIR		=	src
 OBJ_DIR		=	obj
 LIBFT_DIR	=	libft
 LIBFT		=	$(LIBFT_DIR)/libft.a
+LIBFT_FLAGS	=	-L$(LIBFT_DIR) -lft
 MLX42_DIR	=	./MLX42
 MLX42		=	$(MLX42_DIR)/build/libmlx42.a
-MLX42_FLAGS	=
-ifeq ($(shell uname),Darwin)
-	MLX42_FLAGS = -L$(MLX42_DIR)/build -lmlx42 -framework Cocoa -framework OpenGL -framework IOKit -lglfw
-else ifeq ($(shell uname),Linux)
-	MLX42_FLAGS = -L$(MLX42_DIR)/build -lmlx42 -Iinclude -ldl -lglfw -pthread -lm
-endif
+MLX42_FLAGS	=	-L$(MLX42_DIR)/build -lmlx42 -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 
 # Source files and corresponding object files
 SRCS		=	main.c parse_map.c parse_map_utils.c projection.c
@@ -33,8 +29,12 @@ all: $(NAME)
 
 # Link object files and libft to create the final executable
 $(NAME): $(MLX42) $(LIBFT) $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(MLX42_FLAGS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_FLAGS) $(MLX42_FLAGS)
 	@echo "Compiling fdf project"
+
+debug: $(MLX42) $(LIBFT) $(OBJS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_FLAGS) $(MLX42_FLAGS) $(DEBUG_FLAGS)
+	@echo "Compiling fdf project with debug flags"
 
 # Compile source files into object files in the obj/ folder
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
@@ -54,8 +54,8 @@ $(LIBFT):
 $(MLX42):
 	@echo "Compiling mlx42..."
 	@if [ ! -d $(MLX42_DIR)/build ]; then mkdir -p $(MLX42_DIR)/build; fi
-	@git submodule update --remote --init -q
-	@cd $(MLX42_DIR)/build && cmake .. && make -j4
+# 	@git submodule update --init --recursive -q
+	@cd $(MLX42_DIR)/build && cmake -DDEBUG=1 .. && make -j4
 
 # Clean object files from both fdf and libft
 clean:

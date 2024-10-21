@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:04:59 by obehavka          #+#    #+#             */
-/*   Updated: 2024/10/20 13:43:48 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/10/21 11:59:42 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,24 @@
 # include <fcntl.h>
 # include <math.h>
 
+# define WIN_W 1920
+# define WIN_L 1080
+# define WIN_TITLE "FdF"
+
 typedef struct s_vars
 {
-    void *mlx;
-    void *win;
-} t_vars;
+	mlx_t		*mlx;
+	mlx_image_t	*img;
+}	t_vars;
 
 typedef struct s_img
 {
-    void    *img_ptr;
-    char    *data;
-    int     bits_per_pixel;
-    int     line_length;
-    int     endian;
-} t_img;
+	void	*img_ptr;
+	char	*data;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_img;
 
 typedef struct s_coordinates
 {
