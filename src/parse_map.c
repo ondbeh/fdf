@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:24:01 by obehavka          #+#    #+#             */
-/*   Updated: 2024/10/20 09:20:39 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:32:27 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,9 @@ int	parse_map(t_map **map, char *path)
 	t_list		*file_by_line;
 	char		***str_map;
 
-
 	fd = open(path, O_RDONLY);
 	file_by_line = read_file(fd);
+	close (fd);
 	str_map = create_str_map(file_by_line);
 	init_map(str_map, map);
 	ft_lstclear(&file_by_line, free);
