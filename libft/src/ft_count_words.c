@@ -6,11 +6,11 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 09:14:17 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 09:15:24 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 10:57:49 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libft.h"
 
 size_t	ft_count_words(char *string, char separator)
 {
