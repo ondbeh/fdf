@@ -3,3 +3,6 @@ result
 libft/obj/*.o
 libft/*.a
 obj/*.o
+.idea/*
+*/*.fdf
+fdf_42

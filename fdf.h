@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:04:59 by obehavka          #+#    #+#             */
-/*   Updated: 2024/10/22 08:13:57 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 07:44:16 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,16 @@
 # include <fcntl.h>
 # include <math.h>
 
-# define WIN_W 1920
-# define WIN_L 1080
+# define WIN_W 2880
+# define WIN_L 1620
+# define HEIHGT_SCALE 0.09
 # define WIN_TITLE "FdF"
 
 typedef struct s_coordinates
 {
-	float			x;
-	float			y;
+	double			x;
+	double			y;
+	double			z;
 }	t_coordinates;
 
 typedef struct s_map
@@ -33,7 +35,6 @@ typedef struct s_map
 	size_t			width;
 	size_t			length;
 	int				**map;
-	t_coordinates	**projection;
 }	t_map;
 
 typedef struct s_vars
@@ -41,6 +42,10 @@ typedef struct s_vars
 	mlx_t		*mlx;
 	mlx_image_t	*img;
 	t_map		*map;
+	double		size_len_scale;
+	double		size_wid_scale;
+	double		height_scale;
+
 }	t_vars;
 
 char	***free_string_map(char ***map);
@@ -48,5 +53,7 @@ int		**free_int_map(int **map);
 int		parse_map(t_map **map, char *path);
 int		get_map_sizes(t_map *map, char ***str_map);
 int		project_map(t_map *map);
+void	bresenham(t_vars *vars, t_coordinates point1, t_coordinates point2);
+void	put_map_to_image(t_vars *vars);
 
 #endif

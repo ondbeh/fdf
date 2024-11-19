@@ -1,41 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_map_utils.c                                  :+:      :+:    :+:   */
+/*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/19 14:10:45 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 08:27:56 by obehavka         ###   ########.fr       */
+/*   Created: 2024/11/19 08:34:06 by obehavka          #+#    #+#             */
+/*   Updated: 2024/11/19 08:34:21 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
-
-char	***free_string_map(char ***map)
+void	error_exit(char *message)
 {
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	while (map[i])
-	{
-		j = 0;
-		while (map[i][j])
-			free (map[i][j++]);
-		free (map[i++]);
-	}
-	free (map);
-	return (NULL);
-}
-
-int	**free_int_map(int **map)
-{
-	size_t	i;
-
-	i = 0;
-	while (map[i])
-		free (map[i++]);
-	free (map);
-	return (NULL);
+	write(2, message, ft_strlen(message));
+	exit(1);
 }

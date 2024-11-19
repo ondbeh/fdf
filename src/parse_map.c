@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:24:01 by obehavka          #+#    #+#             */
-/*   Updated: 2024/10/22 14:32:27 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 08:33:48 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,12 +96,37 @@ static void	init_map(char ***str_map, t_map **map)
 		return ;
 	}
 	(*map)->map = convert_map(str_map, (*map)->length, (*map)->width);
-	(*map)->projection = NULL;
 	if (!(*map)->map)
 	{
 		free (*map);
 		*map = NULL;
 	}
+}
+
+int	get_map_sizes(t_map *map, char *path)
+{
+	int		fd;
+	size_t	width;
+	size_t	length;
+	char	*line;
+
+	fd = open(path, O_RDONLY);
+	if (fd == -1)
+		error_exit("Error\nFailed to open file");
+	width = 0;
+	length = 0;
+	line = get_next_line(fd);
+
+	while (line)
+	{
+		++length;
+		if (width == 0)
+			width = ft_count_words(line, ' ');
+		free (line);
+		line = get_next_line(fd);
+	}
+	close (fd);
+	return (1);
 }
 
 int	parse_map(t_map **map, char *path)
@@ -110,6 +135,7 @@ int	parse_map(t_map **map, char *path)
 	t_list		*file_by_line;
 	char		***str_map;
 
+	get_map_sizes(*map, path);
 	fd = open(path, O_RDONLY);
 	file_by_line = read_file(fd);
 	close (fd);

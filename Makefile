@@ -19,7 +19,7 @@ MLX42		=	$(MLX42_DIR)/build/libmlx42.a
 MLX42_FLAGS	=	-L$(MLX42_DIR)/build -lmlx42 -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 
 # Source files and corresponding object files
-SRCS		=	main.c parse_map.c parse_map_utils.c projection.c
+SRCS		=	main.c parse_map.c parse_map_utils.c bresenham.c print_map.c
 
 SRCS		:=	$(addprefix $(SRC_DIR)/, $(SRCS))
 OBJS		=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -70,7 +70,7 @@ clean:
 fclean: clean
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 	@echo "Deleting libft.a"
-	@rm -f $(NAME)
+	@$(RM) $(NAME)
 	@echo "Deleting fdf executable"
 
 # Rebuild everything
