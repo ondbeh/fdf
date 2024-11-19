@@ -53,8 +53,8 @@ $(LIBFT):
 # Build the MLX42 library
 $(MLX42):
 	@echo "Compiling mlx42..."
+	@git submodule update --init --recursive -q
 	@if [ ! -d $(MLX42_DIR)/build ]; then mkdir -p $(MLX42_DIR)/build; fi
-# 	@git submodule update --init --recursive -q
 	@cd $(MLX42_DIR)/build && cmake .. && make -j4
 
 # Clean object files from both fdf and libft
