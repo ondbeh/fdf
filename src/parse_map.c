@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:24:01 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 11:14:47 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:24:41 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ static void	fill_lines(t_map *map, char *line, size_t i)
 		map->map[i][j] = ft_atoi(split_line[j]);
 		color_start = ft_strchr(split_line[j], ',');
 		if (color_start)
-			map->color_map[i][j] = ft_atoi_base(color_start + 1, 16)
-				<< 8 | FULLY_OPAQUE;
+			map->color_map[i][j] = ft_atoi_base(color_start + 1, 16);
 		else
 			map->color_map[i][j] = BASE_COLOR;
 		free (split_line[j]);
@@ -58,7 +57,7 @@ static void	fill_maps(t_map *map, char *path)
 	close (fd);
 }
 
-void	get_map_sizes(t_map *map, char *path)
+static void	get_map_sizes(t_map *map, char *path)
 {
 	int		fd;
 	size_t	width;
@@ -84,7 +83,7 @@ void	get_map_sizes(t_map *map, char *path)
 	close (fd);
 }
 
-int	parse_map(t_map **map, char *path)
+void	parse_map(t_map **map, char *path)
 {
 	*map = ft_calloc(1, sizeof(t_map));
 	if (!*map)
@@ -92,5 +91,4 @@ int	parse_map(t_map **map, char *path)
 	get_map_sizes(*map, path);
 	allocate_maps(*map);
 	fill_maps(*map, path);
-	return (1);
 }

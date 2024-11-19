@@ -6,3 +6,4 @@ obj/*.o
 .idea/*
 */*.fdf
 fdf_42
+.DS_Store

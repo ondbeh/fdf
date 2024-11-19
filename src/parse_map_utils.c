@@ -6,13 +6,13 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 14:10:45 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 09:19:14 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:22:21 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../fdf.h"
 
-int	**free_int_map(int **map)
+void	**free_int_map(int **map)
 {
 	size_t	i;
 

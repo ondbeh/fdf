@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 11:38:41 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 13:19:32 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:56:36 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,14 @@ static void	get_size_scale(t_vars *vars)
 	total_size = (vars->map->width + vars->map->length);
 	len_scale = ((double)WIN_L / (double)(total_size - 1));
 	wid_scale = ((double)WIN_W / (double)(total_size - 1));
-	vars->size_len_scale = fmax(len_scale, wid_scale) * 0.8;
-	vars->size_wid_scale = fmax(len_scale, wid_scale) * 0.8;
+	vars->size_scale = fmax(len_scale, wid_scale);
+	if (total_size > BIG_MAP)
+		vars->horizontal_push_scale = BIG_MAP_HOR_PUSH_SCALE;
+	else
+	{
+		vars->horizontal_push_scale = SMALL_MAP_HOR_PUSH_SCALE;
+		vars->size_scale *= SMALL_MAP_SIZE_SCALE;
+	}
 }
 
 void	put_map_to_image(t_vars *vars)
@@ -90,13 +96,13 @@ void	put_map_to_image(t_vars *vars)
 		while (j < vars->map->width)
 		{
 			if (i < vars->map->length - 1)
-				bresenham(vars,
-					(t_node){i, j, vars->map->map[i][j], vars->map->color_map[i][j]},
-					(t_node){i + 1, j, vars->map->map[i + 1][j], vars->map->color_map[i + 1][j]});
+				bresenham(vars, (t_node){i, j, vars->map->map[i][j],
+					vars->map->color_map[i][j]}, (t_node){i + 1, j,
+					vars->map->map[i + 1][j], vars->map->color_map[i + 1][j]});
 			if (j < vars->map->width - 1)
-				bresenham(vars,
-					(t_node){i, j, vars->map->map[i][j], vars->map->color_map[i][j]},
-					(t_node){i, j + 1, vars->map->map[i][j + 1], vars->map->color_map[i][j + 1]});
+				bresenham(vars, (t_node){i, j, vars->map->map[i][j],
+					vars->map->color_map[i][j]}, (t_node){i, j + 1,
+					vars->map->map[i][j + 1], vars->map->color_map[i][j + 1]});
 			++j;
 		}
 		++i;

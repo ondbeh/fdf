@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 08:56:21 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 13:25:53 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:58:40 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,19 @@ static void	project_isometric(t_vars *vars, t_node *point)
 	rotated.x = -point->y;
 	rotated.y = point->x;
 	point->x = (rotated.y - rotated.x) * cos(M_PI / 6);
-	point->y = (rotated.x + rotated.y + vars->map->width * 1.5)
-		* sin(M_PI / 6) - point->z * vars->height_scale;
+	point->y = (rotated.x + rotated.y + vars->map->width
+			* vars->horizontal_push_scale) * sin(M_PI / 6)
+		- point->z * vars->height_scale;
 }
 
 static void	project_and_scale(t_vars *vars, t_node *point1, t_node *point2)
 {
 	project_isometric(vars, point1);
 	project_isometric(vars, point2);
-	point1->x *= vars->size_len_scale;
-	point1->y *= vars->size_len_scale;
-	point2->x *= vars->size_len_scale;
-	point2->y *= vars->size_len_scale;
+	point1->x *= vars->size_scale;
+	point1->y *= vars->size_scale;
+	point2->x *= vars->size_scale;
+	point2->y *= vars->size_scale;
 }
 
 static int	get_color(int color1, int color2, double ratio)
@@ -39,12 +40,12 @@ static int	get_color(int color1, int color2, double ratio)
 	int	green;
 	int	blue;
 
-	red = (int)((1 - ratio) * ((color1 >> 24) & 0xFF))
-		+ (int)(ratio * ((color2 >> 24) & 0xFF));
-	green = (int)((1 - ratio) * ((color1 >> 16) & 0xFF))
+	red = (int)((1 - ratio) * ((color1 >> 16) & 0xFF))
 		+ (int)(ratio * ((color2 >> 16) & 0xFF));
-	blue = (int)((1 - ratio) * ((color1 >> 8) & 0xFF))
+	green = (int)((1 - ratio) * ((color1 >> 8) & 0xFF))
 		+ (int)(ratio * ((color2 >> 8) & 0xFF));
+	blue = (int)((1 - ratio) * (color1 & 0xFF))
+		+ (int)(ratio * (color2 & 0xFF));
 	return ((red << 24) | (green << 16) | (blue << 8) | FULLY_OPAQUE);
 }
 

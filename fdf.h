@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:04:59 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 11:32:30 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:44:52 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,12 @@
 
 # define BASE_COLOR 0xFFFFFFFF
 # define FULLY_OPAQUE 0xFF
-# define WIN_W 2880
-# define WIN_L 1620
-# define HEIHGT_SCALE 0.09
+# define WIN_W 3200
+# define WIN_L 1800
+# define BIG_MAP 350
+# define BIG_MAP_HOR_PUSH_SCALE 1.1
+# define SMALL_MAP_HOR_PUSH_SCALE 1.5
+# define SMALL_MAP_SIZE_SCALE 0.8
 # define WIN_TITLE "FdF"
 
 typedef struct s_node
@@ -47,15 +50,14 @@ typedef struct s_vars
 	mlx_t		*mlx;
 	mlx_image_t	*img;
 	t_map		*map;
-	double		size_len_scale;
-	double		size_wid_scale;
+	double		size_scale;
+	double		horizontal_push_scale;
 	double		height_scale;
 
 }	t_vars;
 
-int		**free_int_map(int **map);
-int		parse_map(t_map **map, char *path);
-void	get_map_sizes(t_map *map, char *path);
+void	**free_int_map(int **map);
+void	parse_map(t_map **map, char *path);
 void	bresenham(t_vars *vars, t_node point1, t_node point2);
 void	put_map_to_image(t_vars *vars);
 void	error_handler(t_map *map, char *message);
