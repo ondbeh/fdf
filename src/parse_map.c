@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:24:01 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 09:29:18 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:14:47 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ static void	fill_lines(t_map *map, char *line, size_t i)
 		map->map[i][j] = ft_atoi(split_line[j]);
 		color_start = ft_strchr(split_line[j], ',');
 		if (color_start)
-			map->color_map[i][j] = ft_atoi_base(color_start + 3, 16);
+			map->color_map[i][j] = ft_atoi_base(color_start + 1, 16)
+				<< 8 | FULLY_OPAQUE;
 		else
 			map->color_map[i][j] = BASE_COLOR;
 		free (split_line[j]);

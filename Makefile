@@ -33,7 +33,7 @@ $(NAME): $(MLX42) $(LIBFT) $(OBJS)
 	@echo "Compiling fdf project"
 
 debug: $(MLX42) $(LIBFT) $(OBJS)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_FLAGS) $(MLX42_FLAGS) $(DEBUG_FLAGS)
+	@$(CC) $(DEBUG_FLAGS) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_FLAGS) $(MLX42_FLAGS)
 	@echo "Compiling fdf project with debug flags"
 
 # Compile source files into object files in the obj/ folder
