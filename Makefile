@@ -19,7 +19,7 @@ MLX42		=	$(MLX42_DIR)/build/libmlx42.a
 MLX42_FLAGS	=	-L$(MLX42_DIR)/build -lmlx42 -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 
 # Source files and corresponding object files
-SRCS		=	main.c parse_map.c parse_map_utils.c bresenham.c print_map.c
+SRCS		=	main.c parse_map.c parse_map_utils.c bresenham.c print_map.c error_handler.c \
 
 SRCS		:=	$(addprefix $(SRC_DIR)/, $(SRCS))
 OBJS		=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -55,7 +55,7 @@ $(MLX42):
 	@echo "Compiling mlx42..."
 	@if [ ! -d $(MLX42_DIR)/build ]; then mkdir -p $(MLX42_DIR)/build; fi
 # 	@git submodule update --init --recursive -q
-	@cd $(MLX42_DIR)/build && cmake -DDEBUG=1 .. && make -j4
+	@cd $(MLX42_DIR)/build && cmake .. && make -j4
 
 # Clean object files from both fdf and libft
 clean:
@@ -78,7 +78,8 @@ re: fclean all
 
 # Norm rule
 norm:
-	norminette src fdf.h
+	@echo "Norminette for libft, fdf.h and src:"
+	@-norminette src libft fdf.h || true
 
 # PHONY prevents conflicts with files named like the targets
 .PHONY: all clean fclean re

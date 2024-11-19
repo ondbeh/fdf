@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_handler.c                                    :+:      :+:    :+:   */
+/*   ft_count_words.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 08:34:06 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 08:54:39 by obehavka         ###   ########.fr       */
+/*   Created: 2024/11/19 09:14:17 by obehavka          #+#    #+#             */
+/*   Updated: 2024/11/19 09:15:24 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "libft.h"
 
-void	error_exit(char *message)
+size_t	ft_count_words(char *string, char separator)
 {
-	write(2, message, ft_strlen(message));
-	exit(1);
-}
+	size_t	words;
 
-void	error_handler(t_map *map, char *message)
-{
-	free_int_map(map->map);
-	free_int_map(map->color_map);
-	error_exit(message);
+	words = 0;
+	while (*string)
+	{
+		while (*string && *string == separator)
+			++string;
+		if (*string)
+			++words;
+		while (*string && *string != separator)
+			++string;
+	}
+	return (words);
 }

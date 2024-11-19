@@ -6,104 +6,58 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 12:24:01 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 08:33:48 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 09:29:18 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../fdf.h"
 
-static t_list	*read_file(int fd)
+static void	fill_lines(t_map *map, char *line, size_t i)
 {
-	char	*new_line;
-	t_list	*new_node;
-	t_list	*lst;
-
-	if (fd == -1)
-		return (NULL);
-	lst = NULL;
-	new_line = get_next_line(fd);
-	while (new_line)
-	{
-		new_node = ft_lstnew((void *) new_line);
-		if (!new_node)
-		{
-			ft_lstclear(&lst, free);
-			return (NULL);
-		}
-		ft_lstadd_back(&lst, new_node);
-		new_line = get_next_line(fd);
-	}
-	return (lst);
-}
-
-static char	***create_str_map(t_list *lines)
-{
-	char	***string_map;
-	size_t	i;
-
-	if (!lines)
-		return (NULL);
-	string_map = ft_calloc(ft_lstsize(lines) + 1, sizeof (char **));
-	if (!string_map)
-		return (NULL);
-	i = 0;
-	while (lines)
-	{
-		string_map[i] = ft_split((char *) lines->content, ' ');
-		if (!string_map[i])
-			return (free_string_map(string_map));
-		++i;
-		lines = lines->next;
-	}
-	return (string_map);
-}
-
-static int	**convert_map(char ***str_map, size_t map_length, size_t map_width)
-{
-	size_t	i;
 	size_t	j;
-	int		**int_map;
+	char	**split_line;
+	char	*color_start;
 
-	int_map = ft_calloc(map_length + 1, sizeof (int *));
-	if (!int_map)
-		return (NULL);
-	i = 0;
-	while (i < map_length)
+	j = 0;
+	split_line = ft_split(line, ' ');
+	if (!split_line)
+		error_handler(map, "Error:\nFailed to split line\n");
+	while (split_line[j])
 	{
-		int_map[i] = ft_calloc(map_width + 1, sizeof (int));
-		if (!int_map[i])
-			return (free_int_map(int_map));
-		j = 0;
-		while (j < map_width)
-		{
-			int_map[i][j] = ft_atoi(str_map[i][j]);
-			++j;
-		}
+		map->map[i][j] = ft_atoi(split_line[j]);
+		color_start = ft_strchr(split_line[j], ',');
+		if (color_start)
+			map->color_map[i][j] = ft_atoi_base(color_start + 3, 16);
+		else
+			map->color_map[i][j] = BASE_COLOR;
+		free (split_line[j]);
+		++j;
+	}
+	free (split_line);
+}
+
+static void	fill_maps(t_map *map, char *path)
+{
+	int		fd;
+	size_t	i;
+	char	*line;
+
+	fd = open(path, O_RDONLY);
+	if (fd == -1)
+		error_handler(map, "Error:\nFailed to open file\n");
+	i = 0;
+	line = get_next_line(fd);
+	while (line)
+	{
+		fill_lines(map, line, i);
+		free (line);
+		line = get_next_line(fd);
 		++i;
 	}
-	return (int_map);
+	close (fd);
 }
 
-static void	init_map(char ***str_map, t_map **map)
-{
-	*map = malloc(sizeof(t_map));
-	if (!(*map))
-		return ;
-	if (!get_map_sizes(*map, str_map))
-	{
-		free (map);
-		*map = NULL;
-		return ;
-	}
-	(*map)->map = convert_map(str_map, (*map)->length, (*map)->width);
-	if (!(*map)->map)
-	{
-		free (*map);
-		*map = NULL;
-	}
-}
-
-int	get_map_sizes(t_map *map, char *path)
+void	get_map_sizes(t_map *map, char *path)
 {
 	int		fd;
 	size_t	width;
@@ -112,11 +66,10 @@ int	get_map_sizes(t_map *map, char *path)
 
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
-		error_exit("Error\nFailed to open file");
+		error_exit("Error:\nFailed to open file\n");
 	width = 0;
 	length = 0;
 	line = get_next_line(fd);
-
 	while (line)
 	{
 		++length;
@@ -125,25 +78,18 @@ int	get_map_sizes(t_map *map, char *path)
 		free (line);
 		line = get_next_line(fd);
 	}
+	map->width = width;
+	map->length = length;
 	close (fd);
-	return (1);
 }
 
 int	parse_map(t_map **map, char *path)
 {
-	int			fd;
-	t_list		*file_by_line;
-	char		***str_map;
-
+	*map = ft_calloc(1, sizeof(t_map));
+	if (!*map)
+		error_exit("Error:\nFailed to allocate memory\n");
 	get_map_sizes(*map, path);
-	fd = open(path, O_RDONLY);
-	file_by_line = read_file(fd);
-	close (fd);
-	str_map = create_str_map(file_by_line);
-	init_map(str_map, map);
-	ft_lstclear(&file_by_line, free);
-	free_string_map(str_map);
-	if (!(*map))
-		return (0);
+	allocate_maps(*map);
+	fill_maps(*map, path);
 	return (1);
 }

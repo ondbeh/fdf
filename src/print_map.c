@@ -6,7 +6,7 @@
 /*   By: obehavka <obehavka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 11:38:41 by obehavka          #+#    #+#             */
-/*   Updated: 2024/11/19 07:39:30 by obehavka         ###   ########.fr       */
+/*   Updated: 2024/11/19 09:34:40 by obehavka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	get_size_scale(t_vars *vars)
 	total_size = (vars->map->width + vars->map->length);
 	len_scale = ((double)WIN_L / (double)(total_size - 1));
 	printf("len_scale = %f\n", len_scale);
-	wid_scale = ((double)WIN_W /(double) (total_size - 1));
+	wid_scale = ((double)WIN_W / (double)(total_size - 1));
 	printf("wid_scale = %f\n", wid_scale);
 	vars->size_len_scale = fmax(len_scale, wid_scale);
 	vars->size_wid_scale = fmax(len_scale, wid_scale);
@@ -93,9 +93,11 @@ void	put_map_to_image(t_vars *vars)
 		while (j < vars->map->width)
 		{
 			if (i < vars->map->length - 1)
-				bresenham(vars, (t_coordinates){i, j, vars->map->map[i][j]}, (t_coordinates){i + 1, j, vars->map->map[i + 1][j]});
+				bresenham(vars, (t_coordinates){i, j, vars->map->map[i][j]},
+					(t_coordinates){i + 1, j, vars->map->map[i + 1][j]});
 			if (j < vars->map->width - 1)
-				bresenham(vars, (t_coordinates){i, j, vars->map->map[i][j]}, (t_coordinates){i, j + 1, vars->map->map[i][j + 1]});
+				bresenham(vars, (t_coordinates){i, j, vars->map->map[i][j]},
+					(t_coordinates){i, j + 1, vars->map->map[i][j + 1]});
 			++j;
 		}
 		++i;
