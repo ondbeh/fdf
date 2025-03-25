@@ -33,8 +33,8 @@ FdF (Fil de Fer) is a graphics project that renders wireframe models from height
 
 ## 🎮 Demo
 
-![FdF Demo](screenshots/demo.gif)
-
+![FdF Demo - 42 map](screenshots/42.png)
+![FdF Demo - fractal map](screenshots/fractal.png)
 ---
 
 ## 🔧 Installation
